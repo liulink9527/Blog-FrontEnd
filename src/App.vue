@@ -1,28 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { generateMenu } from './assets/js/menu'
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  created() {
+    if (this.$store.state.userId != null) {
+      generateMenu()
+    }
+    // 上传访客信息
+    this.axios.post('/api/report')
+  },
+
+  methods: {},
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
