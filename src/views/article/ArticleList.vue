@@ -340,7 +340,7 @@
     </el-table>
 
     <!-- 分页 -->
-    <el-pagination
+    <!-- <el-pagination
       class="pagination-container"
       background
       @size-change="sizeChange"
@@ -349,7 +349,7 @@
       :page-size="size"
       :total="count"
       :page-sizes="[10, 20]"
-      layout="total, sizes, prev, pager, next, jumper" />
+      layout="total, sizes, prev, pager, next, jumper" /> -->
 
     <!-- 批量逻辑删除对话框 -->
     <el-dialog
