@@ -338,6 +338,40 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 分页 -->
+    <el-pagination
+      class="pagination-container"
+      background
+      @size-change="sizeChange"
+      @current-change="currentChange"
+      :current-page="current"
+      :page-size="size"
+      :total="count"
+      :page-sizes="[10, 20]"
+      layout="total, sizes, prev, pager, next, jumper" />
+
+    <!-- 批量逻辑删除对话框 -->
+    <el-dialog
+      :visible.sync="updateIsDelete"
+      width="30%">
+      <div
+        class="dialog-title-container"
+        slot="title">
+        <i
+          class="el-icon-warning"
+          style="color: #ff9900" />提示
+      </div>
+      <div style="font-size: 1rem">是否删除选中项?</div>
+      <div slot="footer">
+        <el-button @click="updateIsDelete = false">取消</el-button>
+        <el-button
+          type="primary"
+          @click="updateArticleDelete(null)">
+          确定</el-button
+        >
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -413,6 +447,14 @@ export default {
       }
       this.current = 1
       this.activeStatus = status
+    },
+    sizeChange(size) {
+      this.size = size
+      this.listArticles()
+    },
+    currentChange(current) {
+      this.current = current
+      this.listArticles()
     },
     listArticles() {
       this.axios
@@ -516,6 +558,28 @@ export default {
         }
         this.updateIsDelete = false
       })
+    },
+  },
+  watch: {
+    type() {
+      this.current = 1
+      this.listArticles()
+    },
+    categoryId() {
+      this.current = 1
+      this.listArticles()
+    },
+    tagId() {
+      this.current = 1
+      this.listArticles()
+    },
+    status() {
+      this.current = 1
+      this.listArticles()
+    },
+    isDelete() {
+      this.current = 1
+      this.listArticles()
     },
   },
   computed: {
