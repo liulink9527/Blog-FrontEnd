@@ -85,7 +85,7 @@
           type="primary"
           size="small"
           icon="el-icon-upload">
-          批量导入
+          文章导入
         </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
@@ -335,12 +335,35 @@
               删除
             </el-button>
           </el-popconfirm>
+          <el-popconfirm
+            title="确定恢复吗？"
+            v-if="scope.row.isDelete == 1"
+            @confirm="updateArticleDelete(scope.row.id)">
+            <el-button
+              size="mini"
+              type="success"
+              slot="reference">
+              恢复
+            </el-button>
+          </el-popconfirm>
+          <el-popconfirm
+            style="margin-left: 10px"
+            v-if="scope.row.isDelete == 1"
+            title="确定彻底删除吗？"
+            @confirm="deleteArticles(scope.row.id)">
+            <el-button
+              size="mini"
+              type="danger"
+              slot="reference"
+              >删除</el-button
+            >
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 分页 -->
-    <!-- <el-pagination
+    <el-pagination
       class="pagination-container"
       background
       @size-change="sizeChange"
@@ -349,7 +372,7 @@
       :page-size="size"
       :total="count"
       :page-sizes="[10, 20]"
-      layout="total, sizes, prev, pager, next, jumper" /> -->
+      layout="total, sizes, prev, pager, next, jumper" />
 
     <!-- 批量逻辑删除对话框 -->
     <el-dialog
@@ -364,12 +387,78 @@
       </div>
       <div style="font-size: 1rem">是否删除选中项?</div>
       <div slot="footer">
-        <el-button @click="updateIsDelete = false">取消</el-button>
+        <el-button @click="updateIsDelete = false">取 消</el-button>
         <el-button
           type="primary"
           @click="updateArticleDelete(null)">
-          确定</el-button
+          确 定</el-button
         >
+      </div>
+    </el-dialog>
+
+    <!-- 批量彻底删除对话框 -->
+    <el-dialog
+      :visible.sync="remove"
+      width="30%">
+      <div
+        class="dialog-title-container"
+        slot="title">
+        <i
+          class="el-icon-warning"
+          style="color: #ff9900" />提示
+      </div>
+      <div style="font-size: 1rem">是否彻底删除选中项？</div>
+      <div slot="footer">
+        <el-button @click="remove = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="deleteArticles(null)">
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 批量seo对话框 -->
+    <el-dialog
+      :visible.sync="seo"
+      width="30%">
+      <div
+        class="dialog-title-container"
+        slot="title">
+        <i
+          class="el-icon-warning"
+          style="color: #ff9900" />提示
+      </div>
+      <div style="font-size: 1rem">确定执行SEO？</div>
+      <div slot="footer">
+        <el-button @click="seo = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="seoOperated(null)"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
+
+    <!-- 批量导出对话框 -->
+    <el-dialog
+      :visible.sync="isExport"
+      width="30%">
+      <div
+        class="dialog-title-container"
+        slot="title">
+        <i
+          class="el-icon-warning"
+          style="color: #ff9900" />提示
+      </div>
+      <div style="font-size: 1rem">是否导出选中文章？</div>
+      <div slot="footer">
+        <el-button @click="isExport = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="exportArticles(null)">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
   </el-card>
@@ -394,6 +483,7 @@ export default {
       tagId: null,
       type: null,
       remove: false,
+      seo: false,
       articleList: [],
       count: 0,
       loading: true,
@@ -456,6 +546,54 @@ export default {
       this.current = current
       this.listArticles()
     },
+    exportArticles(id) {
+      let param = {}
+      if (id == null) {
+        param.articleIdList = this.articleIdList
+      } else {
+        param.articleIdList = [id]
+      }
+      this.axios.post('/api/admin/articles/exports', param).then(({ data }) => {
+        if (data.code === 20000) {
+          this.$notify.success({
+            title: '成功',
+            message: data.message,
+          })
+          data.data.forEach((item) => {
+            this.downloadFile(item)
+          })
+          this.listArticles()
+        } else {
+          this.$notify.error({
+            title: '失败',
+            message: data.message,
+          })
+        }
+        this.isExport = false
+      })
+    },
+    seoOperated(id) {
+      let param = {}
+      if (id == null) {
+        param.articleIdList = this.articleIdList
+      } else {
+        param.articleIdList = [id]
+      }
+      this.axios.post('/api/admin/articles/baiduSeo', param).then(({ data }) => {
+        if (data.code === 20000) {
+          this.$notify.success({
+            title: '推送成功',
+            message: data.message,
+          })
+        } else {
+          this.$notify.error({
+            title: '推送失败',
+            message: data.message,
+          })
+        }
+      })
+      this.seo = false
+    },
     listArticles() {
       this.axios
         .get('/api/admin/articles', {
@@ -504,9 +642,9 @@ export default {
       this.current = 1
       this.listArticles()
     },
-    selectionChange() {
+    selectionChange(articleList) {
       this.articleIdList = []
-      this.articleList.forEach((item) => {
+      articleList.forEach((item) => {
         this.articleIdList.push(item.id)
       })
     },
@@ -547,7 +685,7 @@ export default {
         if (data.code === 20000) {
           this.$notify.success({
             title: '成功',
-            message: '文章删除成功',
+            message: data.message,
           })
           this.listArticles()
         } else {
@@ -557,6 +695,31 @@ export default {
           })
         }
         this.updateIsDelete = false
+      })
+    },
+    deleteArticles(id) {
+      let param = {}
+      if (id == null) {
+        param = {
+          data: this.articleIdList,
+        }
+      } else {
+        param = { data: [id] }
+      }
+      this.axios.delete('/api/admin/articles', param).then(({ data }) => {
+        if (data.code === 20000) {
+          this.$notify.success({
+            title: '成功',
+            message: data.message,
+          })
+          this.listArticles()
+        } else {
+          this.$notify.error({
+            title: '失败',
+            message: data.message,
+          })
+        }
+        this.remove = false
       })
     },
   },
