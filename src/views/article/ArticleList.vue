@@ -3,31 +3,11 @@
     <div class="title">{{ this.$route.name }}</div>
     <!-- 文章状态 -->
     <div class="article-status-menu">
-      <span
-        @click="changeStatus('all')"
-        :class="isActive('all')"
-        >全部</span
-      >
-      <span
-        @click="changeStatus('public')"
-        :class="isActive('public')"
-        >公开</span
-      >
-      <span
-        @click="changeStatus('secret')"
-        :class="isActive('secret')"
-        >私密</span
-      >
-      <span
-        @click="changeStatus('draft')"
-        :class="isActive('draft')"
-        >草稿箱</span
-      >
-      <span
-        @click="changeStatus('delete')"
-        :class="isActive('delete')"
-        >回收站</span
-      >
+      <span @click="changeStatus('all')" :class="isActive('all')">全部</span>
+      <span @click="changeStatus('public')" :class="isActive('public')">公开</span>
+      <span @click="changeStatus('secret')" :class="isActive('secret')">私密</span>
+      <span @click="changeStatus('draft')" :class="isActive('draft')">草稿箱</span>
+      <span @click="changeStatus('delete')" :class="isActive('delete')">回收站</span>
     </div>
 
     <!-- 表格操作 -->
@@ -81,12 +61,7 @@
       </el-button>
 
       <el-dropdown>
-        <el-button
-          type="primary"
-          size="small"
-          icon="el-icon-upload">
-          文章导入
-        </el-button>
+        <el-button type="primary" size="small" icon="el-icon-upload"> 文章导入 </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <el-upload
@@ -120,11 +95,7 @@
           placeholder="请选择文章类型"
           size="small"
           style="margin-right: 1rem; width: 180px">
-          <el-option
-            v-for="item in typeList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value" />
+          <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!-- 分类 -->
         <el-select
@@ -134,11 +105,7 @@
           filterable
           placeholder="请选择分类"
           style="margin-right: 1rem; width: 180px">
-          <el-option
-            v-for="item in categoryList"
-            :key="item.id"
-            :label="item.categoryName"
-            :value="item.id" />
+          <el-option v-for="item in categoryList" :key="item.id" :label="item.categoryName" :value="item.id" />
         </el-select>
         <!-- 标签 -->
         <el-select
@@ -148,11 +115,7 @@
           filterable
           placeholder="请选择标签"
           style="margin-right: 1rem; width: 180px">
-          <el-option
-            v-for="item in tagList"
-            :key="item.id"
-            :label="item.tagName"
-            :value="item.id" />
+          <el-option v-for="item in tagList" :key="item.id" :label="item.tagName" :value="item.id" />
         </el-select>
         <!-- 文章名 -->
         <el-input
@@ -164,69 +127,35 @@
           style="width: 200px"
           @keyup.enter.native="searchArticles" />
         <!-- 搜索 -->
-        <el-button
-          type="primary"
-          size="small"
-          icon="el-icon-search"
-          style="margin-left: 1rem"
-          @click="searchArticles">
+        <el-button type="primary" size="small" icon="el-icon-search" style="margin-left: 1rem" @click="searchArticles">
           搜索
         </el-button>
       </div>
     </div>
 
     <!-- 表格展示 -->
-    <el-table
-      border
-      :data="articleList"
-      @selection-change="selectionChange"
-      v-loading="loading">
+    <el-table border :data="articleList" @selection-change="selectionChange" v-loading="loading">
       <!-- 选择列 -->
-      <el-table-column
-        type="selection"
-        width="55" />
+      <el-table-column type="selection" width="55" />
 
       <!-- 封面列 -->
-      <el-table-column
-        prop="articleCover"
-        label="文章封面"
-        width="180"
-        align="center">
+      <el-table-column prop="articleCover" label="文章封面" width="180" align="center">
         <template slot-scope="scope">
-          <el-image
-            class="article-cover"
-            :src="scope.row.articleCover ? scope.row.articleCover : ''" />
-          <i
-            v-if="scope.row.status == 1"
-            class="iconfont el-icon-mygongkai article-status-icon" />
-          <i
-            v-if="scope.row.status == 2"
-            class="iconfont el-icon-mymima article-status-icon" />
-          <i
-            v-if="scope.row.status == 3"
-            class="iconfont el-icon-mycaogaoxiang article-status-icon" />
+          <el-image class="article-cover" :src="scope.row.articleCover ? scope.row.articleCover : ''" />
+          <i v-if="scope.row.status == 1" class="iconfont el-icon-mygongkai article-status-icon" />
+          <i v-if="scope.row.status == 2" class="iconfont el-icon-mymima article-status-icon" />
+          <i v-if="scope.row.status == 3" class="iconfont el-icon-mycaogaoxiang article-status-icon" />
         </template>
       </el-table-column>
 
       <!-- 标题列 -->
-      <el-table-column
-        prop="articleTitle"
-        label="标题"
-        align="center" />
+      <el-table-column prop="articleTitle" label="标题" align="center" />
 
       <!-- 文章分类列 -->
-      <el-table-column
-        prop="categoryName"
-        label="分类"
-        width="110"
-        align="center" />
+      <el-table-column prop="categoryName" label="分类" width="110" align="center" />
 
       <!-- 文章标签列 -->
-      <el-table-column
-        prop="tagDTOList"
-        label="标签"
-        width="170"
-        align="center">
+      <el-table-column prop="tagDTOList" label="标签" width="170" align="center">
         <template slot-scope="scope">
           <el-tag
             v-for="item of scope.row.tagDTOList"
@@ -238,11 +167,7 @@
       </el-table-column>
 
       <!-- 文章浏览量 -->
-      <el-table-column
-        prop="viewsCount"
-        label="浏览量"
-        width="70"
-        align="center">
+      <el-table-column prop="viewsCount" label="浏览量" width="70" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.viewsCount">
             {{ scope.row.viewsCount }}
@@ -252,11 +177,7 @@
       </el-table-column>
 
       <!-- 文章点赞量 -->
-      <el-table-column
-        prop="likeCount"
-        label="点赞量"
-        width="70"
-        align="center">
+      <el-table-column prop="likeCount" label="点赞量" width="70" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.likeCount">
             {{ scope.row.likeCount }}
@@ -266,11 +187,7 @@
       </el-table-column>
 
       <!-- 文章类型 -->
-      <el-table-column
-        prop="type"
-        label="类型"
-        width="80"
-        align="center">
+      <el-table-column prop="type" label="类型" width="80" align="center">
         <template slot-scope="scope">
           <el-tag :type="articleType(scope.row.type).tagType">
             {{ articleType(scope.row.type).name }}
@@ -279,25 +196,15 @@
       </el-table-column>
 
       <!-- 文章发表时间 -->
-      <el-table-column
-        prop="createTime"
-        label="发表时间"
-        width="130"
-        align="center">
+      <el-table-column prop="createTime" label="发表时间" width="130" align="center">
         <template slot-scope="scope">
-          <i
-            class="el-icon-time"
-            style="margin-right: 5px" />
+          <i class="el-icon-time" style="margin-right: 5px" />
           {{ scope.row.createTime | date }}
         </template>
       </el-table-column>
 
       <!-- 文章置顶 -->
-      <el-table-column
-        prop="isTop"
-        label="置顶"
-        width="80"
-        align="center">
+      <el-table-column prop="isTop" label="置顶" width="80" align="center">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.isTop"
@@ -311,16 +218,9 @@
       </el-table-column>
 
       <!-- 列操作 -->
-      <el-table-column
-        label="操作"
-        align="center"
-        width="150">
+      <el-table-column label="操作" align="center" width="150">
         <template slot-scope="scope">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="editArticle(scope.row.id)"
-            v-if="scope.row.isDelete == 0">
+          <el-button type="primary" size="mini" @click="editArticle(scope.row.id)" v-if="scope.row.isDelete == 0">
             编辑
           </el-button>
           <el-popconfirm
@@ -328,35 +228,20 @@
             style="margin-left: 10px"
             @confirm="updateArticleDelete(scope.row.id)"
             v-if="scope.row.isDelete == 0">
-            <el-button
-              size="mini"
-              type="danger"
-              slot="reference">
-              删除
-            </el-button>
+            <el-button size="mini" type="danger" slot="reference"> 删除 </el-button>
           </el-popconfirm>
           <el-popconfirm
             title="确定恢复吗？"
             v-if="scope.row.isDelete == 1"
             @confirm="updateArticleDelete(scope.row.id)">
-            <el-button
-              size="mini"
-              type="success"
-              slot="reference">
-              恢复
-            </el-button>
+            <el-button size="mini" type="success" slot="reference"> 恢复 </el-button>
           </el-popconfirm>
           <el-popconfirm
             style="margin-left: 10px"
             v-if="scope.row.isDelete == 1"
             title="确定彻底删除吗？"
             @confirm="deleteArticles(scope.row.id)">
-            <el-button
-              size="mini"
-              type="danger"
-              slot="reference"
-              >删除</el-button
-            >
+            <el-button size="mini" type="danger" slot="reference">删除</el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -375,90 +260,69 @@
       layout="total, sizes, prev, pager, next, jumper" />
 
     <!-- 批量逻辑删除对话框 -->
-    <el-dialog
-      :visible.sync="updateIsDelete"
-      width="30%">
-      <div
-        class="dialog-title-container"
-        slot="title">
-        <i
-          class="el-icon-warning"
-          style="color: #ff9900" />提示
-      </div>
+    <el-dialog :visible.sync="updateIsDelete" width="30%">
+      <div class="dialog-title-container" slot="title"><i class="el-icon-warning" style="color: #ff9900" />提示</div>
       <div style="font-size: 1rem">是否删除选中项?</div>
       <div slot="footer">
         <el-button @click="updateIsDelete = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="updateArticleDelete(null)">
-          确 定</el-button
-        >
+        <el-button type="primary" @click="updateArticleDelete(null)"> 确 定</el-button>
       </div>
     </el-dialog>
 
     <!-- 批量彻底删除对话框 -->
-    <el-dialog
-      :visible.sync="remove"
-      width="30%">
-      <div
-        class="dialog-title-container"
-        slot="title">
-        <i
-          class="el-icon-warning"
-          style="color: #ff9900" />提示
-      </div>
+    <el-dialog :visible.sync="remove" width="30%">
+      <div class="dialog-title-container" slot="title"><i class="el-icon-warning" style="color: #ff9900" />提示</div>
       <div style="font-size: 1rem">是否彻底删除选中项？</div>
       <div slot="footer">
         <el-button @click="remove = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="deleteArticles(null)">
-          确 定
-        </el-button>
+        <el-button type="primary" @click="deleteArticles(null)"> 确 定 </el-button>
       </div>
     </el-dialog>
 
     <!-- 批量seo对话框 -->
-    <el-dialog
-      :visible.sync="seo"
-      width="30%">
-      <div
-        class="dialog-title-container"
-        slot="title">
-        <i
-          class="el-icon-warning"
-          style="color: #ff9900" />提示
-      </div>
+    <el-dialog :visible.sync="seo" width="30%">
+      <div class="dialog-title-container" slot="title"><i class="el-icon-warning" style="color: #ff9900" />提示</div>
       <div style="font-size: 1rem">确定执行SEO？</div>
       <div slot="footer">
         <el-button @click="seo = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="seoOperated(null)"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="seoOperated(null)">确 定</el-button>
       </div>
     </el-dialog>
 
     <!-- 批量导出对话框 -->
-    <el-dialog
-      :visible.sync="isExport"
-      width="30%">
-      <div
-        class="dialog-title-container"
-        slot="title">
-        <i
-          class="el-icon-warning"
-          style="color: #ff9900" />提示
-      </div>
+    <el-dialog :visible.sync="isExport" width="30%">
+      <div class="dialog-title-container" slot="title"><i class="el-icon-warning" style="color: #ff9900" />提示</div>
       <div style="font-size: 1rem">是否导出选中文章？</div>
       <div slot="footer">
         <el-button @click="isExport = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="exportArticles(null)">
-          确 定
-        </el-button>
+        <el-button type="primary" @click="exportArticles(null)"> 确 定 </el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 文章抓取页面 -->
+    <el-dialog title="文章抓取" :visible.sync="dialogTableVisable">
+      <el-form>
+        <el-form-item label="抓取类型" :label-width="formLabelWidth">
+          <el-radio-group v-model="reptile.type" size="small">
+            <el-radio :label="0" border>CSDN </el-radio>
+            <el-radio disabled :label="1" border> OSCHINA </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="目标地址url" :label-width="formLabelWidth">
+          <el-input v-model="reptile.url" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="tip" :label-width="formLabelWidth" v-if="!isEditForm">
+          <span style="color: limegreen">
+            请注意如下几点:<br />
+            1.如果抓取成功则会自动保存到文章表中<br />
+            2.CSDN的文章没有封面图片，所以会是随机图片<br />
+            3.暂时只支持CSDN的文章抓取
+          </span>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogTableVisable = false">取 消</el-button>
+        <el-button :loading="loadingReptile" type="primary" @click="handleReptile">确 定</el-button>
       </div>
     </el-dialog>
   </el-card>
@@ -489,9 +353,15 @@ export default {
       loading: true,
       articleIdList: [],
       updateIsDelete: false,
-      seo: false,
       isExport: false,
       dialogTableVisable: false,
+      formLabelWidth: '120px',
+      isEditForm: 0,
+      loadingReptile: false,
+      reptile: {
+        type: 0,
+        url: null,
+      },
       typeList: [
         {
           value: 1,
@@ -571,6 +441,19 @@ export default {
         }
         this.isExport = false
       })
+    },
+    downloadFile(url) {
+      const iframe = document.createElement('iframe')
+      iframe.style.display = 'none' // 防止影响页面
+      iframe.style.height = 0 // 防止影响页面
+      iframe.src = url
+      document.body.appendChild(iframe)
+      setTimeout(
+        () => {
+          iframe.remove()
+        },
+        5 * 60 * 1000,
+      )
     },
     seoOperated(id) {
       let param = {}
@@ -721,6 +604,37 @@ export default {
         }
         this.remove = false
       })
+    },
+    handleReptile() {
+      if (this.reptile.url === '' || this.reptile.url == null) {
+        this.$message.error('请输入抓取地址!!')
+        return false
+      }
+      this.loadingReptile = true
+      this.axios
+        .get('/api/admin/articles/reptile', {
+          params: {
+            url: this.reptile.url,
+          },
+        })
+        .then(({ data }) => {
+          if (data.code === 20000) {
+            this.$message.success('OK')
+            this.dialogTableVisable = false
+            this.loadingReptile = false
+            this.listArticles()
+          } else {
+            this.$notify.error({
+              title: '失败',
+              message: data.message,
+            })
+            this.loadingReptile = false
+          }
+        })
+        .catch((err) => {
+          this.loadingReptile = false
+          console.log(err)
+        })
     },
   },
   watch: {
